@@ -1,0 +1,461 @@
+GAS LISTING /tmp/ccOUVMmo.s 			page 1
+
+
+   1              		.file	"waitSemList.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN11waitSemList3getEv
+   9              	_ZN11waitSemList3getEv:
+  10              	.LFB31:
+  11              		.file 1 "src/waitSemList.cpp"
+   1:src/waitSemList.cpp **** //
+   2:src/waitSemList.cpp **** // Created by os on 6/4/24.
+   3:src/waitSemList.cpp **** //
+   4:src/waitSemList.cpp **** 
+   5:src/waitSemList.cpp **** #include "../h/_sem.hpp"
+   6:src/waitSemList.cpp **** #include "../h/waitSemList.hpp"
+   7:src/waitSemList.cpp **** #include "../h/syscall_c.hpp"
+   8:src/waitSemList.cpp **** 
+   9:src/waitSemList.cpp **** PCB *waitSemList::get() {
+  12              		.loc 1 9 25
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FE 		addi	sp,sp,-32
+  16              		.cfi_def_cfa_offset 32
+  17 0004 233C1100 		sd	ra,24(sp)
+  18 0008 23388100 		sd	s0,16(sp)
+  19 000c 23349100 		sd	s1,8(sp)
+  20              		.cfi_offset 1, -8
+  21              		.cfi_offset 8, -16
+  22              		.cfi_offset 9, -24
+  23 0010 13040102 		addi	s0,sp,32
+  24              		.cfi_def_cfa 8, 0
+  25 0014 93070500 		mv	a5,a0
+  10:src/waitSemList.cpp ****     if (empty()) return nullptr;
+  26              		.loc 1 10 5
+  27              	.LVL1:
+  28              	.LBB6:
+  29              	.LBB7:
+  30              		.file 2 "src/../h/waitSemList.hpp"
+   1:src/../h/waitSemList.hpp **** //
+   2:src/../h/waitSemList.hpp **** // Created by os on 6/4/24.
+   3:src/../h/waitSemList.hpp **** //
+   4:src/../h/waitSemList.hpp **** 
+   5:src/../h/waitSemList.hpp **** #ifndef WAITSEMLIST_HPP
+   6:src/../h/waitSemList.hpp **** #define WAITSEMLIST_HPP
+   7:src/../h/waitSemList.hpp **** #include "PCB.hpp"
+   8:src/../h/waitSemList.hpp **** #include "../lib/mem.h"
+   9:src/../h/waitSemList.hpp **** #include "_sem.hpp"
+  10:src/../h/waitSemList.hpp **** 
+  11:src/../h/waitSemList.hpp **** 
+  12:src/../h/waitSemList.hpp **** class waitSemList {
+  13:src/../h/waitSemList.hpp **** public:
+  14:src/../h/waitSemList.hpp ****     waitSemList():head(nullptr), tail(nullptr){}
+  15:src/../h/waitSemList.hpp ****     struct waitSemElem {
+  16:src/../h/waitSemList.hpp ****         PCB *thread;
+  17:src/../h/waitSemList.hpp ****         waitSemElem *next;
+  18:src/../h/waitSemList.hpp ****     };
+GAS LISTING /tmp/ccOUVMmo.s 			page 2
+
+
+  19:src/../h/waitSemList.hpp **** 
+  20:src/../h/waitSemList.hpp ****     waitSemElem *head;
+  21:src/../h/waitSemList.hpp ****     waitSemElem *tail;
+  22:src/../h/waitSemList.hpp ****     bool empty() { return head == nullptr; }
+  31              		.loc 2 22 20
+  32              		.loc 2 22 27 is_stmt 0
+  33 0018 03350500 		ld	a0,0(a0)
+  34              	.LVL2:
+  35              	.LBE7:
+  36              	.LBE6:
+  37              		.loc 1 10 5
+  38 001c 630E0502 		beqz	a0,.L4
+  11:src/waitSemList.cpp ****     PCB *first = head->thread;
+  39              		.loc 1 11 5 is_stmt 1
+  40              		.loc 1 11 10 is_stmt 0
+  41 0020 83340500 		ld	s1,0(a0)
+  42              	.LVL3:
+  12:src/waitSemList.cpp ****     waitSemElem *p = head;
+  43              		.loc 1 12 5 is_stmt 1
+  13:src/waitSemList.cpp ****     head = head->next;
+  44              		.loc 1 13 5
+  45              		.loc 1 13 18 is_stmt 0
+  46 0024 03378500 		ld	a4,8(a0)
+  47              		.loc 1 13 10
+  48 0028 23B0E700 		sd	a4,0(a5)
+  14:src/waitSemList.cpp ****     if (empty())tail = nullptr;
+  49              		.loc 1 14 5 is_stmt 1
+  50              	.LVL4:
+  51              		.loc 2 22 20
+  52              		.loc 1 14 5 is_stmt 0
+  53 002c 63020702 		beqz	a4,.L6
+  54              	.L3:
+  15:src/waitSemList.cpp ****     mem_free(p);
+  55              		.loc 1 15 5 is_stmt 1
+  56              		.loc 1 15 13 is_stmt 0
+  57 0030 97000000 		call	_Z8mem_freePv@plt
+  57      E7800000 
+  58              	.LVL5:
+  16:src/waitSemList.cpp ****     return first;
+  59              		.loc 1 16 5 is_stmt 1
+  60              	.L1:
+  17:src/waitSemList.cpp **** }
+  61              		.loc 1 17 1 is_stmt 0
+  62 0038 13850400 		mv	a0,s1
+  63 003c 83308101 		ld	ra,24(sp)
+  64              		.cfi_remember_state
+  65              		.cfi_restore 1
+  66 0040 03340101 		ld	s0,16(sp)
+  67              		.cfi_restore 8
+  68              		.cfi_def_cfa 2, 32
+  69 0044 83348100 		ld	s1,8(sp)
+  70              		.cfi_restore 9
+  71 0048 13010102 		addi	sp,sp,32
+  72              		.cfi_def_cfa_offset 0
+  73 004c 67800000 		jr	ra
+  74              	.LVL6:
+  75              	.L6:
+GAS LISTING /tmp/ccOUVMmo.s 			page 3
+
+
+  76              		.cfi_restore_state
+  14:src/waitSemList.cpp ****     mem_free(p);
+  77              		.loc 1 14 17 is_stmt 1 discriminator 1
+  14:src/waitSemList.cpp ****     mem_free(p);
+  78              		.loc 1 14 22 is_stmt 0 discriminator 1
+  79 0050 23B40700 		sd	zero,8(a5)
+  80 0054 6FF0DFFD 		j	.L3
+  81              	.LVL7:
+  82              	.L4:
+  10:src/waitSemList.cpp ****     PCB *first = head->thread;
+  83              		.loc 1 10 25
+  84 0058 93040500 		mv	s1,a0
+  85 005c 6FF0DFFD 		j	.L1
+  86              		.cfi_endproc
+  87              	.LFE31:
+  89              		.align	2
+  90              		.globl	_ZN11waitSemList3addEP3PCB
+  92              	_ZN11waitSemList3addEP3PCB:
+  93              	.LFB32:
+  18:src/waitSemList.cpp **** 
+  19:src/waitSemList.cpp **** void waitSemList::add(PCB *thread) {
+  94              		.loc 1 19 36 is_stmt 1
+  95              		.cfi_startproc
+  96              	.LVL8:
+  97 0060 130101FE 		addi	sp,sp,-32
+  98              		.cfi_def_cfa_offset 32
+  99 0064 233C1100 		sd	ra,24(sp)
+ 100 0068 23388100 		sd	s0,16(sp)
+ 101 006c 23349100 		sd	s1,8(sp)
+ 102 0070 23302101 		sd	s2,0(sp)
+ 103              		.cfi_offset 1, -8
+ 104              		.cfi_offset 8, -16
+ 105              		.cfi_offset 9, -24
+ 106              		.cfi_offset 18, -32
+ 107 0074 13040102 		addi	s0,sp,32
+ 108              		.cfi_def_cfa 8, 0
+ 109 0078 93040500 		mv	s1,a0
+ 110 007c 13890500 		mv	s2,a1
+  20:src/waitSemList.cpp ****     waitSemElem *elem = (waitSemElem *) mem_alloc(sizeof(waitSemElem));
+ 111              		.loc 1 20 5
+ 112              		.loc 1 20 50 is_stmt 0
+ 113 0080 13050001 		li	a0,16
+ 114              	.LVL9:
+ 115 0084 97000000 		call	_Z9mem_allocm@plt
+ 115      E7800000 
+ 116              	.LVL10:
+  21:src/waitSemList.cpp ****     elem->thread = thread;
+ 117              		.loc 1 21 5 is_stmt 1
+ 118              		.loc 1 21 18 is_stmt 0
+ 119 008c 23302501 		sd	s2,0(a0)
+  22:src/waitSemList.cpp ****     elem->next = nullptr;
+ 120              		.loc 1 22 5 is_stmt 1
+ 121              		.loc 1 22 16 is_stmt 0
+ 122 0090 23340500 		sd	zero,8(a0)
+  23:src/waitSemList.cpp ****     if (tail) {
+ 123              		.loc 1 23 5 is_stmt 1
+ 124              		.loc 1 23 9 is_stmt 0
+GAS LISTING /tmp/ccOUVMmo.s 			page 4
+
+
+ 125 0094 83B78400 		ld	a5,8(s1)
+ 126              		.loc 1 23 5
+ 127 0098 63820702 		beqz	a5,.L8
+  24:src/waitSemList.cpp ****         tail->next = elem;
+ 128              		.loc 1 24 9 is_stmt 1
+ 129              		.loc 1 24 20 is_stmt 0
+ 130 009c 23B4A700 		sd	a0,8(a5)
+  25:src/waitSemList.cpp ****         tail = elem;
+ 131              		.loc 1 25 9 is_stmt 1
+ 132              		.loc 1 25 14 is_stmt 0
+ 133 00a0 23B4A400 		sd	a0,8(s1)
+ 134              	.L7:
+  26:src/waitSemList.cpp ****     } else {
+  27:src/waitSemList.cpp ****         head = elem;
+  28:src/waitSemList.cpp ****         tail = head;
+  29:src/waitSemList.cpp ****     }
+  30:src/waitSemList.cpp **** }
+ 135              		.loc 1 30 1
+ 136 00a4 83308101 		ld	ra,24(sp)
+ 137              		.cfi_remember_state
+ 138              		.cfi_restore 1
+ 139 00a8 03340101 		ld	s0,16(sp)
+ 140              		.cfi_restore 8
+ 141              		.cfi_def_cfa 2, 32
+ 142 00ac 83348100 		ld	s1,8(sp)
+ 143              		.cfi_restore 9
+ 144              	.LVL11:
+ 145 00b0 03390100 		ld	s2,0(sp)
+ 146              		.cfi_restore 18
+ 147              	.LVL12:
+ 148 00b4 13010102 		addi	sp,sp,32
+ 149              		.cfi_def_cfa_offset 0
+ 150 00b8 67800000 		jr	ra
+ 151              	.LVL13:
+ 152              	.L8:
+ 153              		.cfi_restore_state
+  27:src/waitSemList.cpp ****         tail = head;
+ 154              		.loc 1 27 9 is_stmt 1
+  27:src/waitSemList.cpp ****         tail = head;
+ 155              		.loc 1 27 14 is_stmt 0
+ 156 00bc 23B0A400 		sd	a0,0(s1)
+  28:src/waitSemList.cpp ****     }
+ 157              		.loc 1 28 9 is_stmt 1
+  28:src/waitSemList.cpp ****     }
+ 158              		.loc 1 28 14 is_stmt 0
+ 159 00c0 23B4A400 		sd	a0,8(s1)
+ 160              		.loc 1 30 1
+ 161 00c4 6FF01FFE 		j	.L7
+ 162              		.cfi_endproc
+ 163              	.LFE32:
+ 165              	.Letext0:
+ 166              		.file 3 "src/../h/../lib/hw.h"
+ 167              		.file 4 "src/../h/syscall_c.hpp"
+ 168              		.file 5 "src/../h/PCB.hpp"
+GAS LISTING /tmp/ccOUVMmo.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 waitSemList.cpp
+     /tmp/ccOUVMmo.s:9      .text:0000000000000000 _ZN11waitSemList3getEv
+     /tmp/ccOUVMmo.s:13     .text:0000000000000000 .L0 
+     /tmp/ccOUVMmo.s:15     .text:0000000000000000 .L0 
+     /tmp/ccOUVMmo.s:16     .text:0000000000000004 .L0 
+     /tmp/ccOUVMmo.s:20     .text:0000000000000010 .L0 
+     /tmp/ccOUVMmo.s:21     .text:0000000000000010 .L0 
+     /tmp/ccOUVMmo.s:22     .text:0000000000000010 .L0 
+     /tmp/ccOUVMmo.s:24     .text:0000000000000014 .L0 
+     /tmp/ccOUVMmo.s:31     .text:0000000000000018 .L0 
+     /tmp/ccOUVMmo.s:32     .text:0000000000000018 .L0 
+     /tmp/ccOUVMmo.s:33     .text:0000000000000018 .L0 
+     /tmp/ccOUVMmo.s:38     .text:000000000000001c .L0 
+     /tmp/ccOUVMmo.s:40     .text:0000000000000020 .L0 
+     /tmp/ccOUVMmo.s:41     .text:0000000000000020 .L0 
+     /tmp/ccOUVMmo.s:44     .text:0000000000000024 .L0 
+     /tmp/ccOUVMmo.s:45     .text:0000000000000024 .L0 
+     /tmp/ccOUVMmo.s:46     .text:0000000000000024 .L0 
+     /tmp/ccOUVMmo.s:48     .text:0000000000000028 .L0 
+     /tmp/ccOUVMmo.s:51     .text:000000000000002c .L0 
+     /tmp/ccOUVMmo.s:52     .text:000000000000002c .L0 
+     /tmp/ccOUVMmo.s:53     .text:000000000000002c .L0 
+     /tmp/ccOUVMmo.s:56     .text:0000000000000030 .L0 
+     /tmp/ccOUVMmo.s:57     .text:0000000000000030 .L0 
+     /tmp/ccOUVMmo.s:61     .text:0000000000000038 .L0 
+     /tmp/ccOUVMmo.s:62     .text:0000000000000038 .L0 
+     /tmp/ccOUVMmo.s:64     .text:0000000000000040 .L0 
+     /tmp/ccOUVMmo.s:65     .text:0000000000000040 .L0 
+     /tmp/ccOUVMmo.s:67     .text:0000000000000044 .L0 
+     /tmp/ccOUVMmo.s:68     .text:0000000000000044 .L0 
+     /tmp/ccOUVMmo.s:70     .text:0000000000000048 .L0 
+     /tmp/ccOUVMmo.s:72     .text:000000000000004c .L0 
+     /tmp/ccOUVMmo.s:76     .text:0000000000000050 .L0 
+     /tmp/ccOUVMmo.s:78     .text:0000000000000050 .L0 
+     /tmp/ccOUVMmo.s:79     .text:0000000000000050 .L0 
+     /tmp/ccOUVMmo.s:84     .text:0000000000000058 .L0 
+     /tmp/ccOUVMmo.s:86     .text:0000000000000060 .L0 
+     /tmp/ccOUVMmo.s:92     .text:0000000000000060 _ZN11waitSemList3addEP3PCB
+     /tmp/ccOUVMmo.s:95     .text:0000000000000060 .L0 
+     /tmp/ccOUVMmo.s:97     .text:0000000000000060 .L0 
+     /tmp/ccOUVMmo.s:98     .text:0000000000000064 .L0 
+     /tmp/ccOUVMmo.s:103    .text:0000000000000074 .L0 
+     /tmp/ccOUVMmo.s:104    .text:0000000000000074 .L0 
+     /tmp/ccOUVMmo.s:105    .text:0000000000000074 .L0 
+     /tmp/ccOUVMmo.s:106    .text:0000000000000074 .L0 
+     /tmp/ccOUVMmo.s:108    .text:0000000000000078 .L0 
+     /tmp/ccOUVMmo.s:112    .text:0000000000000080 .L0 
+     /tmp/ccOUVMmo.s:113    .text:0000000000000080 .L0 
+     /tmp/ccOUVMmo.s:118    .text:000000000000008c .L0 
+     /tmp/ccOUVMmo.s:119    .text:000000000000008c .L0 
+     /tmp/ccOUVMmo.s:121    .text:0000000000000090 .L0 
+     /tmp/ccOUVMmo.s:122    .text:0000000000000090 .L0 
+     /tmp/ccOUVMmo.s:124    .text:0000000000000094 .L0 
+     /tmp/ccOUVMmo.s:125    .text:0000000000000094 .L0 
+     /tmp/ccOUVMmo.s:127    .text:0000000000000098 .L0 
+     /tmp/ccOUVMmo.s:129    .text:000000000000009c .L0 
+GAS LISTING /tmp/ccOUVMmo.s 			page 6
+
+
+     /tmp/ccOUVMmo.s:130    .text:000000000000009c .L0 
+     /tmp/ccOUVMmo.s:132    .text:00000000000000a0 .L0 
+     /tmp/ccOUVMmo.s:133    .text:00000000000000a0 .L0 
+     /tmp/ccOUVMmo.s:136    .text:00000000000000a4 .L0 
+     /tmp/ccOUVMmo.s:137    .text:00000000000000a8 .L0 
+     /tmp/ccOUVMmo.s:138    .text:00000000000000a8 .L0 
+     /tmp/ccOUVMmo.s:140    .text:00000000000000ac .L0 
+     /tmp/ccOUVMmo.s:141    .text:00000000000000ac .L0 
+     /tmp/ccOUVMmo.s:143    .text:00000000000000b0 .L0 
+     /tmp/ccOUVMmo.s:146    .text:00000000000000b4 .L0 
+     /tmp/ccOUVMmo.s:149    .text:00000000000000b8 .L0 
+     /tmp/ccOUVMmo.s:153    .text:00000000000000bc .L0 
+     /tmp/ccOUVMmo.s:155    .text:00000000000000bc .L0 
+     /tmp/ccOUVMmo.s:156    .text:00000000000000bc .L0 
+     /tmp/ccOUVMmo.s:158    .text:00000000000000c0 .L0 
+     /tmp/ccOUVMmo.s:159    .text:00000000000000c0 .L0 
+     /tmp/ccOUVMmo.s:161    .text:00000000000000c4 .L0 
+     /tmp/ccOUVMmo.s:162    .text:00000000000000c8 .L0 
+     /tmp/ccOUVMmo.s:169    .text:00000000000000c8 .L0 
+     /tmp/ccOUVMmo.s:82     .text:0000000000000058 .L4
+     /tmp/ccOUVMmo.s:75     .text:0000000000000050 .L6
+     /tmp/ccOUVMmo.s:54     .text:0000000000000030 .L3
+     /tmp/ccOUVMmo.s:60     .text:0000000000000038 .L1
+     /tmp/ccOUVMmo.s:152    .text:00000000000000bc .L8
+     /tmp/ccOUVMmo.s:134    .text:00000000000000a4 .L7
+     /tmp/ccOUVMmo.s:923    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccOUVMmo.s:2078   .debug_str:0000000000000446 .LASF83
+     /tmp/ccOUVMmo.s:2082   .debug_str:0000000000000512 .LASF84
+     /tmp/ccOUVMmo.s:1992   .debug_str:0000000000000203 .LASF85
+     /tmp/ccOUVMmo.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccOUVMmo.s:165    .text:00000000000000c8 .Letext0
+     /tmp/ccOUVMmo.s:1910   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccOUVMmo.s:2018   .debug_str:00000000000002c8 .LASF0
+     /tmp/ccOUVMmo.s:2030   .debug_str:000000000000031b .LASF1
+     /tmp/ccOUVMmo.s:1998   .debug_str:0000000000000242 .LASF2
+     /tmp/ccOUVMmo.s:1978   .debug_str:00000000000001b1 .LASF4
+     /tmp/ccOUVMmo.s:2068   .debug_str:0000000000000404 .LASF3
+     /tmp/ccOUVMmo.s:1930   .debug_str:000000000000007f .LASF5
+     /tmp/ccOUVMmo.s:1952   .debug_str:0000000000000114 .LASF6
+     /tmp/ccOUVMmo.s:2032   .debug_str:000000000000032e .LASF7
+     /tmp/ccOUVMmo.s:2016   .debug_str:00000000000002b5 .LASF8
+     /tmp/ccOUVMmo.s:2088   .debug_str:0000000000000564 .LASF9
+     /tmp/ccOUVMmo.s:1970   .debug_str:000000000000016f .LASF10
+     /tmp/ccOUVMmo.s:2048   .debug_str:00000000000003a1 .LASF11
+     /tmp/ccOUVMmo.s:2034   .debug_str:0000000000000341 .LASF12
+     /tmp/ccOUVMmo.s:1934   .debug_str:0000000000000090 .LASF13
+     /tmp/ccOUVMmo.s:1914   .debug_str:0000000000000009 .LASF14
+     /tmp/ccOUVMmo.s:1942   .debug_str:00000000000000d9 .LASF15
+     /tmp/ccOUVMmo.s:2060   .debug_str:00000000000003dc .LASF16
+     /tmp/ccOUVMmo.s:1948   .debug_str:00000000000000f9 .LASF17
+     /tmp/ccOUVMmo.s:1912   .debug_str:0000000000000000 .LASF18
+     /tmp/ccOUVMmo.s:1964   .debug_str:0000000000000159 .LASF86
+     /tmp/ccOUVMmo.s:2080   .debug_str:000000000000050a .LASF19
+     /tmp/ccOUVMmo.s:2046   .debug_str:000000000000039b .LASF20
+     /tmp/ccOUVMmo.s:2040   .debug_str:000000000000036c .LASF21
+     /tmp/ccOUVMmo.s:1920   .debug_str:000000000000002b .LASF22
+     /tmp/ccOUVMmo.s:1980   .debug_str:00000000000001b8 .LASF23
+GAS LISTING /tmp/ccOUVMmo.s 			page 7
+
+
+     /tmp/ccOUVMmo.s:2072   .debug_str:0000000000000420 .LASF24
+     /tmp/ccOUVMmo.s:1966   .debug_str:0000000000000165 .LASF25
+     /tmp/ccOUVMmo.s:1918   .debug_str:0000000000000023 .LASF60
+     /tmp/ccOUVMmo.s:1962   .debug_str:0000000000000144 .LASF65
+     /tmp/ccOUVMmo.s:2074   .debug_str:0000000000000429 .LASF62
+     /tmp/ccOUVMmo.s:2058   .debug_str:00000000000003d7 .LASF26
+     /tmp/ccOUVMmo.s:1936   .debug_str:00000000000000a0 .LASF28
+     /tmp/ccOUVMmo.s:2076   .debug_str:000000000000043d .LASF30
+     /tmp/ccOUVMmo.s:2056   .debug_str:00000000000003c3 .LASF32
+     /tmp/ccOUVMmo.s:1916   .debug_str:0000000000000019 .LASF27
+     /tmp/ccOUVMmo.s:2026   .debug_str:00000000000002fb .LASF29
+     /tmp/ccOUVMmo.s:2000   .debug_str:0000000000000250 .LASF31
+     /tmp/ccOUVMmo.s:1976   .debug_str:0000000000000196 .LASF33
+     /tmp/ccOUVMmo.s:1988   .debug_str:00000000000001e8 .LASF34
+     /tmp/ccOUVMmo.s:2084   .debug_str:0000000000000526 .LASF35
+     /tmp/ccOUVMmo.s:1932   .debug_str:0000000000000086 .LASF36
+     /tmp/ccOUVMmo.s:1954   .debug_str:000000000000011b .LASF37
+     /tmp/ccOUVMmo.s:2014   .debug_str:00000000000002ab .LASF38
+     /tmp/ccOUVMmo.s:1926   .debug_str:0000000000000063 .LASF39
+     /tmp/ccOUVMmo.s:2092   .debug_str:0000000000000584 .LASF40
+     /tmp/ccOUVMmo.s:1922   .debug_str:0000000000000034 .LASF41
+     /tmp/ccOUVMmo.s:2054   .debug_str:00000000000003be .LASF87
+     /tmp/ccOUVMmo.s:2062   .debug_str:00000000000003f2 .LASF42
+     /tmp/ccOUVMmo.s:2090   .debug_str:0000000000000574 .LASF44
+     /tmp/ccOUVMmo.s:2020   .debug_str:00000000000002d5 .LASF43
+     /tmp/ccOUVMmo.s:1972   .debug_str:000000000000017d .LASF45
+     /tmp/ccOUVMmo.s:1986   .debug_str:00000000000001df .LASF46
+     /tmp/ccOUVMmo.s:1994   .debug_str:0000000000000220 .LASF47
+     /tmp/ccOUVMmo.s:2008   .debug_str:000000000000027d .LASF48
+     /tmp/ccOUVMmo.s:2086   .debug_str:0000000000000541 .LASF49
+     /tmp/ccOUVMmo.s:1960   .debug_str:000000000000013c .LASF50
+     /tmp/ccOUVMmo.s:1938   .debug_str:00000000000000ac .LASF51
+     /tmp/ccOUVMmo.s:1924   .debug_str:0000000000000057 .LASF88
+     /tmp/ccOUVMmo.s:1982   .debug_str:00000000000001c0 .LASF89
+     /tmp/ccOUVMmo.s:1958   .debug_str:0000000000000137 .LASF52
+     /tmp/ccOUVMmo.s:2002   .debug_str:000000000000025f .LASF53
+     /tmp/ccOUVMmo.s:1974   .debug_str:0000000000000190 .LASF54
+     /tmp/ccOUVMmo.s:1984   .debug_str:00000000000001d7 .LASF55
+     /tmp/ccOUVMmo.s:1928   .debug_str:0000000000000079 .LASF56
+     /tmp/ccOUVMmo.s:1956   .debug_str:0000000000000130 .LASF57
+     /tmp/ccOUVMmo.s:2064   .debug_str:00000000000003f8 .LASF58
+     /tmp/ccOUVMmo.s:2096   .debug_str:00000000000005a0 .LASF59
+     /tmp/ccOUVMmo.s:1996   .debug_str:0000000000000234 .LASF90
+     /tmp/ccOUVMmo.s:2042   .debug_str:0000000000000374 .LASF91
+     /tmp/ccOUVMmo.s:2094   .debug_str:0000000000000592 .LASF61
+     /tmp/ccOUVMmo.s:1940   .debug_str:00000000000000b1 .LASF63
+     /tmp/ccOUVMmo.s:2022   .debug_str:00000000000002de .LASF64
+     /tmp/ccOUVMmo.s:2006   .debug_str:000000000000026d .LASF66
+     /tmp/ccOUVMmo.s:1990   .debug_str:00000000000001f8 .LASF92
+     /tmp/ccOUVMmo.s:1968   .debug_str:000000000000016a .LASF67
+     /tmp/ccOUVMmo.s:2012   .debug_str:000000000000029f .LASF68
+     /tmp/ccOUVMmo.s:2028   .debug_str:000000000000030f .LASF93
+     /tmp/ccOUVMmo.s:2038   .debug_str:0000000000000365 .LASF69
+     /tmp/ccOUVMmo.s:2098   .debug_str:00000000000005aa .LASF70
+     /tmp/ccOUVMmo.s:2036   .debug_str:0000000000000350 .LASF71
+     /tmp/ccOUVMmo.s:1950   .debug_str:000000000000010f .LASF72
+     /tmp/ccOUVMmo.s:2004   .debug_str:0000000000000268 .LASF73
+GAS LISTING /tmp/ccOUVMmo.s 			page 8
+
+
+     /tmp/ccOUVMmo.s:1946   .debug_str:00000000000000f3 .LASF74
+     /tmp/ccOUVMmo.s:2010   .debug_str:0000000000000286 .LASF75
+     /tmp/ccOUVMmo.s:2024   .debug_str:00000000000002e4 .LASF94
+     /tmp/ccOUVMmo.s:2100   .debug_str:00000000000005af .LASF95
+     /tmp/ccOUVMmo.s:93     .text:0000000000000060 .LFB32
+     /tmp/ccOUVMmo.s:163    .text:00000000000000c8 .LFE32
+     /tmp/ccOUVMmo.s:2052   .debug_str:00000000000003b9 .LASF77
+     /tmp/ccOUVMmo.s:1802   .debug_loc:0000000000000000 .LLST4
+     /tmp/ccOUVMmo.s:1824   .debug_loc:000000000000005f .LLST5
+     /tmp/ccOUVMmo.s:2066   .debug_str:00000000000003ff .LASF76
+     /tmp/ccOUVMmo.s:116    .text:000000000000008c .LVL10
+     /tmp/ccOUVMmo.s:10     .text:0000000000000000 .LFB31
+     /tmp/ccOUVMmo.s:87     .text:0000000000000060 .LFE31
+     /tmp/ccOUVMmo.s:1846   .debug_loc:00000000000000be .LLST0
+     /tmp/ccOUVMmo.s:2102   .debug_str:00000000000005ca .LASF78
+     /tmp/ccOUVMmo.s:1868   .debug_loc:000000000000011d .LLST1
+     /tmp/ccOUVMmo.s:1879   .debug_loc:0000000000000153 .LLST2
+     /tmp/ccOUVMmo.s:28     .text:0000000000000018 .LBB6
+     /tmp/ccOUVMmo.s:36     .text:000000000000001c .LBE6
+     /tmp/ccOUVMmo.s:1890   .debug_loc:0000000000000189 .LLST3
+     /tmp/ccOUVMmo.s:58     .text:0000000000000038 .LVL5
+     /tmp/ccOUVMmo.s:1944   .debug_str:00000000000000e5 .LASF79
+     /tmp/ccOUVMmo.s:2070   .debug_str:0000000000000416 .LASF81
+     /tmp/ccOUVMmo.s:2044   .debug_str:000000000000038d .LASF80
+     /tmp/ccOUVMmo.s:2050   .debug_str:00000000000003b0 .LASF82
+     /tmp/ccOUVMmo.s:96     .text:0000000000000060 .LVL8
+     /tmp/ccOUVMmo.s:114    .text:0000000000000084 .LVL9
+     /tmp/ccOUVMmo.s:144    .text:00000000000000b0 .LVL11
+     /tmp/ccOUVMmo.s:151    .text:00000000000000bc .LVL13
+     /tmp/ccOUVMmo.s:147    .text:00000000000000b4 .LVL12
+     /tmp/ccOUVMmo.s:14     .text:0000000000000000 .LVL0
+     /tmp/ccOUVMmo.s:34     .text:000000000000001c .LVL2
+     /tmp/ccOUVMmo.s:74     .text:0000000000000050 .LVL6
+     /tmp/ccOUVMmo.s:42     .text:0000000000000024 .LVL3
+     /tmp/ccOUVMmo.s:81     .text:0000000000000058 .LVL7
+     /tmp/ccOUVMmo.s:27     .text:0000000000000018 .LVL1
+     /tmp/ccOUVMmo.s:170    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+_Z8mem_freePv
+_Z9mem_allocm
